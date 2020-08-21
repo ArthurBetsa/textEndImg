@@ -17,7 +17,7 @@ let textToJson = function(textData){
     let outObj=[];
     let separators = ['jpg', 'jpeg', 'png', 'gif'];
 
-    let splitedText = dataText.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
+    let splitedText = textData.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
         .map(value => value.split('https'));
 
     splitedText.map(val=>{
@@ -40,3 +40,58 @@ let check = textToJson(dataText);
 
 console.log(check);
 
+function getSlides(body) {
+    let slides = [{ 'message-text': body, image: null }];
+    const imageNameRegex = /https?:\/\/[^\s]+\.(jpe?g|png|gif)+(\s|$)/g;
+
+    if (imageNameRegex.test(body)) {
+        const imageUrls = body.match(imageNameRegex);
+        const data = [];
+
+        let isTextSlideOnly = false;
+
+        const urlIndexes = {};
+
+        imageUrls.forEach((rawUrl, i) => {
+            const url = rawUrl.trim();
+
+            urlIndexes[url] = !(url in urlIndexes) ? _getIndexList(body, url) : urlIndexes[url];
+            const index = urlIndexes[url].shift();
+            const startFromUrl = index === 0;
+
+            if (!startFromUrl && i === 0) {
+                data.push({ 'message-text': '', image: null, index: { start: 0 } });
+                isTextSlideOnly = true;
+            }
+            data.push({ image: { url }, index: { start: index, finish: index + url.length } });
+        });
+
+        slides = data.map((element, i) => {
+            let text =
+                data.length - 1 > i
+                    ? body.slice(data[i].index.finish + 1, data[i + 1].index.start - 1)
+                    : body.slice(data[i].index.finish + 1);
+
+            if (isTextSlideOnly) {
+                text = body.slice(0, data[i + 1].index.start - 1);
+                isTextSlideOnly = false;
+            }
+
+            return { duration: 5, image: element.image, 'message-text': text || '' };
+        });
+    }
+
+    return slides;
+}
+
+function _getIndexList(body, url) {
+    const list = [];
+    let lastIndex = body.indexOf(url, 0);
+
+    while (lastIndex !== -1) {
+        list.push(lastIndex);
+        lastIndex = body.indexOf(url, lastIndex + 1);
+    }
+
+    return list;
+}
