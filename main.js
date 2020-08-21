@@ -14,13 +14,13 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 https://1.bp.blogspot.com/-MdaQwrpT4Gs/Xdt-ff_hxEI/AAAAAAAAQXE/oOgnysGd9LwoFLMHJ0etngKzXxmQkWc5ACLcBGAsYHQ/s400/Beautiful-Backgrounds%2B%2528122%2529.jpg`;
 
 let textToJson = function (textData) {
-    if(typeof (textData)!=="string"){
+    if (typeof (textData) !== "string") {
         return false;
     }
     const outObj = [];
     const separators = ['jpg', 'jpeg', 'png', 'gif'];
 
-   textData.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
+    textData.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
         .map(value => value.split('https'))
         .map(val => {
             if (val.length > 1) {
@@ -34,8 +34,37 @@ let textToJson = function (textData) {
         });
     return outObj;
 };
-
 let check = textToJson(dataText);
-
 console.log(check);
 
+
+let textToJson2 = function (textData) {
+    if (typeof (textData) !== "string") {
+        return false;
+    }
+    let text = "";
+    let outObj = [];
+    textData.split("\n")
+        .map(value => {
+            if (!(value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
+                text += value;
+            }
+
+            if (value.length > 1 && (value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
+                outObj.push({
+                    text: text,
+                    img: {
+                        url: value
+                    }
+                });
+                text = "";
+            }
+
+        });
+    return outObj;
+};
+
+
+check = textToJson2(dataText);
+
+console.log(check);
