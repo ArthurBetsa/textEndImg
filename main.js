@@ -15,7 +15,9 @@ https://1.bp.blogspot.com/-MdaQwrpT4Gs/Xdt-ff_hxEI/AAAAAAAAQXE/oOgnysGd9LwoFLMHJ
 
 let textToJson = function(textData){
     let outObj=[];
-    let splitedText = dataText.split('jpg')
+    let separators = ['jpg', 'jpeg', 'png', 'gif'];
+
+    let splitedText = dataText.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
         .map(value => value.split('https'));
 
     splitedText.map(val=>{
