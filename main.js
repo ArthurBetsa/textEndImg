@@ -17,8 +17,8 @@ let textToJson = function (textData) {
     if(typeof (textData)!=="string"){
         return false;
     }
-    let outObj = [];
-    let separators = ['jpg', 'jpeg', 'png', 'gif'];
+    const outObj = [];
+    const separators = ['jpg', 'jpeg', 'png', 'gif'];
 
    textData.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
         .map(value => value.split('https'))
