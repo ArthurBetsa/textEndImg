@@ -46,7 +46,7 @@ let textToJson2 = function (textData) {
     let outObj = [];
     textData.split("\n")
         .map(value => {
-            if (!(value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
+            if (value.length>1&&!(value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
                 text += value;
             }
 
