@@ -14,6 +14,9 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 https://1.bp.blogspot.com/-MdaQwrpT4Gs/Xdt-ff_hxEI/AAAAAAAAQXE/oOgnysGd9LwoFLMHJ0etngKzXxmQkWc5ACLcBGAsYHQ/s400/Beautiful-Backgrounds%2B%2528122%2529.jpg`;
 
 let textToJson = function (textData) {
+    if(typeof (textData)!=="string"){
+        return false;
+    }
     let outObj = [];
     let separators = ['jpg', 'jpeg', 'png', 'gif'];
 
@@ -31,7 +34,6 @@ let textToJson = function (textData) {
         });
     return outObj;
 };
-
 
 let check = textToJson(dataText);
 
