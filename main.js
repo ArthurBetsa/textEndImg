@@ -13,58 +13,58 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 
 https://1.bp.blogspot.com/-MdaQwrpT4Gs/Xdt-ff_hxEI/AAAAAAAAQXE/oOgnysGd9LwoFLMHJ0etngKzXxmQkWc5ACLcBGAsYHQ/s400/Beautiful-Backgrounds%2B%2528122%2529.jpg`;
 
-let textToJson = function (textData) {
+
+let textIntoJson = function (textData) {
     if (typeof (textData) !== "string") {
         return false;
     }
-    const outObj = [];
-    const separators = ['jpg', 'jpeg', 'png', 'gif'];
-
-    textData.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
-        .map(value => value.split('https'))
-        .map(val => {
-            if (val.length > 1) {
-                outObj.push({
-                    text: val[0],
-                    img: {
-                        url: `'https${val[1]}jpg`
-                    }
-                });
-            }
-        });
-    return outObj;
-};
-let check = textToJson(dataText);
-console.log(check);
-
-
-let textToJson2 = function (textData) {
-    if (typeof (textData) !== "string") {
-        return false;
-    }
-    let text = "";
-    let outObj = [];
+    let textCollector = "";
+    let outgoingJson = [];
     textData.split("\n")
         .map(value => {
-            if (value.length>1&&!(value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
-                text += value;
-            }
-
-            if (value.length > 1 && (value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
-                outObj.push({
-                    text: text,
+            if (!(value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
+                //is value === text without link?
+                textCollector += value; //write splitted text before link
+            } else {
+                // value === link without text
+                outgoingJson.push({
+                    text: textCollector,
                     img: {
                         url: value
                     }
                 });
-                text = "";
+                textCollector = "";
             }
 
         });
-    return outObj;
+    return outgoingJson;
 };
 
 
-check = textToJson2(dataText);
+console.log(textIntoJson(dataText));
 
-console.log(check);
+
+//
+//
+// let test_textToJson = function (textData) {
+//     if (typeof (textData) !== "string") {
+//         return false;
+//     }
+//     const outObj = [];
+//     const separators = ['jpg', 'jpeg', 'png', 'gif'];
+//
+//     textData.split(new RegExp(separators.join('|'), 'g'))  //https://stackoverflow.com/a/19313633
+//         .map(value => value.split('https'))
+//         .map(val => {
+//             if (val.length > 1) {
+//                 outObj.push({
+//                     text: val[0],
+//                     img: {
+//                         url: `'https${val[1]}jpg`
+//                     }
+//                 });
+//             }
+//         });
+//     return outObj;
+// };
+// console.log(test_textToJson(dataText));
