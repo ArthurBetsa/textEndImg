@@ -14,18 +14,18 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 https://1.bp.blogspot.com/-MdaQwrpT4Gs/Xdt-ff_hxEI/AAAAAAAAQXE/oOgnysGd9LwoFLMHJ0etngKzXxmQkWc5ACLcBGAsYHQ/s400/Beautiful-Backgrounds%2B%2528122%2529.jpg`;
 
 
-let textIntoJson = function (rawTextData) {
+let textIntoJson = function (rawTextData, listOfLinksSeparators) {
     if (typeof (rawTextData) !== "string") {
         return false;
     }
-    const linkSeparators = ['.jpg', '.jpeg', '.png', '.gif', "https://", ".com"];
+    const linksSeparators = (listOfLinksSeparators || ['.jpg', '.jpeg', '.png', '.gif', "https://", ".com"]);
     const outgoingJson = [];
     let textWithoutLinks = "";
 
     rawTextData.split("\n")
         .map(value => {
             // if ((value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
-            if ((value.slice(0, 4) === "http") || value.includes(...linkSeparators)) {   //is value === text with link?
+            if ((value.slice(0, 4) === "http") || value.includes(...linksSeparators)) {   //is value === text with link?
                 outgoingJson.push({
                     text: textWithoutLinks,
                     img: {
