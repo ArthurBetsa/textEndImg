@@ -14,28 +14,29 @@ Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliqu
 https://1.bp.blogspot.com/-MdaQwrpT4Gs/Xdt-ff_hxEI/AAAAAAAAQXE/oOgnysGd9LwoFLMHJ0etngKzXxmQkWc5ACLcBGAsYHQ/s400/Beautiful-Backgrounds%2B%2528122%2529.jpg`;
 
 
-let textIntoJson = function (textData) {
-    if (typeof (textData) !== "string") {
+let textIntoJson = function (rawTextData) {
+    if (typeof (rawTextData) !== "string") {
         return false;
     }
-    let textCollector = "";
-    let outgoingJson = [];
-    textData.split("\n")
+    const linkSeparators = ['.jpg', '.jpeg', '.png', '.gif', "https://", ".com"];
+    const outgoingJson = [];
+    let textWithoutLinks = "";
+
+    rawTextData.split("\n")
         .map(value => {
-            if (!(value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
-                //is value === text without link?
-                textCollector += value; //write splitted text before link
-            } else {
-                // value === link without text
+            // if ((value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
+            if ((value.slice(0, 4) === "http") || value.includes(...linkSeparators)) {   //is value === text with link?
                 outgoingJson.push({
-                    text: textCollector,
+                    text: textWithoutLinks,
                     img: {
                         url: value
                     }
                 });
-                textCollector = "";
+                textWithoutLinks = "";
+            } else {
+                // value === link without text
+                textWithoutLinks += value; //write splitted text before link
             }
-
         });
     return outgoingJson;
 };
