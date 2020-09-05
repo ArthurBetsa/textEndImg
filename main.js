@@ -18,24 +18,25 @@ let textIntoJson = function (rawTextData, listOfLinksSeparators) {
     if (typeof (rawTextData) !== "string") {
         return false;
     }
-    const linksSeparators = (listOfLinksSeparators || ['.jpg', '.jpeg', '.png', '.gif', "https://", ".com"]);
+    const linksSeparators = (listOfLinksSeparators || ['.jpeg', '.png', '.gif', "https://", ".com", '.jpg']);
     const outgoingJson = [];
     let textWithoutLinks = "";
 
     rawTextData.split("\n")
         .map(value => {
-            // if ((value[0] === "h" && value[1] === "t" && value[2] === "t" && value[3] === "p")) {
-            if ((value.slice(0, 4) === "http") || value.includes(...linksSeparators)) {   //is value === text with link?
-                outgoingJson.push({
-                    text: textWithoutLinks,
-                    img: {
-                        url: value
-                    }
-                });
-                textWithoutLinks = "";
-            } else {
-                // value === link without text
-                textWithoutLinks += value; //write splitted text before link
+            for (let i = 1; i <= linksSeparators.length; i++) {
+                if (value.includes(linksSeparators[i])) {  // check: is value includes some of the markers of link
+                    outgoingJson.push({
+                        text: textWithoutLinks,
+                        img: {
+                            url: value,
+                        },
+                    });
+                    textWithoutLinks = "";  //clear string
+                    i = linksSeparators.length;  //exit from iteration if value includes link
+                } else {
+                    textWithoutLinks += value;
+                }
             }
         });
     return outgoingJson;
